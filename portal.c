@@ -7,6 +7,15 @@
 
 // Errors are ignored if only possible error for given function is OOM.
 
+// IMPORTANT! Theoretically the Response signal may arrive before we register
+// match rule and install our filter, we only do this in this order for
+// simplicity, which is fine for file opener since the user interaction (even if
+// cancelled immediately) takes forever relatively speaking, so the race
+// condition will not be hit in practice. That being said, some other portals
+// have been observed to emit Response immediately, so this code won't work with
+// other portals. What we should do is pass a handle_token to the options dict,
+// so that we can predict the request object path.
+
 // cleanup attribute destructor
 void connection_unref(DBusConnection** connection)
 {
